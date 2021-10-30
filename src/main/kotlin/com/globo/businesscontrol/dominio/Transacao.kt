@@ -23,35 +23,35 @@ import javax.persistence.*
 @SQLDelete(sql = "UPDATE TRANSACAO SET DATA_EXCLUSAO=CURRENT_TIMESTAMP WHERE ID=?")
 abstract class Transacao protected constructor(
     data: Date,
-    @Column(name = "VALOR", nullable = false) val valor: BigDecimal,
-    @Column(name = "DESCRICAO", nullable = false) val descricao: String,
-    @ManyToOne @JoinColumn(name = "ID_RESPONSAVEL", nullable = false) val responsavel: Responsavel,
-    @ManyToOne @JoinColumn(name = "ID_CONTA", nullable = false) val conta: Conta,
+    @Column(name = "VALOR", nullable = false) open val valor: BigDecimal,
+    @Column(name = "DESCRICAO", nullable = false) open val descricao: String,
+    @ManyToOne @JoinColumn(name = "ID_RESPONSAVEL", nullable = false) open val responsavel: Responsavel,
+    @ManyToOne @JoinColumn(name = "ID_CONTA", nullable = false) open val conta: Conta,
     @Enumerated(EnumType.STRING) @Column(
         name = "TIPO_TRANSACAO",
         nullable = false,
         insertable = false,
         updatable = false
-    ) val tipoTransacao: TipoTransacaoEnum
+    ) open val tipoTransacao: TipoTransacaoEnum
 ) {
 
     @Id
     @Column(name = "ID", nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
-    var id: Long? = null
-        private set
+    open var id: Long? = null
+        protected set
 
     @CreatedDate
     @Column(name = "DATA_TRANSACAO", nullable = false)
-    val data: LocalDateTime = LocalDateTime.ofInstant(data.toInstant(), ZoneId.of("America/Sao_Paulo"));
+    open val data: LocalDateTime = LocalDateTime.ofInstant(data.toInstant(), ZoneId.of("America/Sao_Paulo"));
 
     @Column(name = "DATA_CRIACAO", nullable = false, updatable = false)
-    val dataCriacao: LocalDateTime = LocalDateTime.now()
+    open val dataCriacao: LocalDateTime = LocalDateTime.now()
 
     @Column(name = "DATA_EXCLUSAO")
-    var dataExclusao: LocalDateTime? = null
-        private set
+    open var dataExclusao: LocalDateTime? = null
+        protected set
 
     @Transient
     var events: MutableList<MudarSaldoEvent>? = mutableListOf()
